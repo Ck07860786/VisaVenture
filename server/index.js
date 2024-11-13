@@ -7,10 +7,10 @@ import { Server } from 'socket.io'; // Import Socket.io
 import dbConnect from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import kycRoutes from './routes/kycRoutes.js';
-import chatRoutes from './routes/chaRoutes.js'; // Ensure chaRoutes is correctly spelled
+import chatRoutes from './routes/chaRoutes.js'; // Corrected the route spelling
 
-const app = express();
 dotenv.config();
+const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Database connection
@@ -22,19 +22,21 @@ const server = http.createServer(app);
 // Initialize Socket.io with the HTTP server
 const io = new Server(server, {
   cors: {
-    origin: '*', // Adjust this to your frontend URL if needed
-    methods: ['GET', 'POST'],
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // Allow credentials
   },
 });
 
-// Middleware
+// Middleware for CORS
 app.use(
   cors({
-    origin: 'https://visa-venture.vercel.app', // Specify your frontend URL
+    origin: '*', // Allow all origins
     credentials: true, // Allow credentials if you are using cookies or sessions
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
   })
 );
+
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -52,7 +54,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
-  // Join a specific chat room using roomId (agentId or any identifier)
+  // Listen for a user joining a specific room using roomId (agentId or any identifier)
   socket.on('join_room', (roomId) => {
     socket.join(roomId);
     console.log(`User joined room: ${roomId}`);
@@ -70,6 +72,9 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.id);
   });
 });
+
+// Preflight request handling for CORS
+app.options('*', cors());
 
 // Start the server
 server.listen(PORT, () => {
