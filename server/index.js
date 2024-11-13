@@ -28,7 +28,13 @@ const io = new Server(server, {
 });
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://visa-venture.vercel.app', // Specify your frontend URL
+    credentials: true, // Allow credentials if you are using cookies or sessions
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 
