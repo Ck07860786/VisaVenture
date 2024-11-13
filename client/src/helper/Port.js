@@ -1,1 +1,1 @@
-export const BASE_URL = "https://visa-venture.vercel.app/"
+export const BASE_URL = "https://visa-venture-server.vercel.app/"
