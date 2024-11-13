@@ -5,6 +5,9 @@ import { BASE_URL } from '@/helper/Port';
 import Navbar from '@/components/ui/shared/Navbar';
 import backgroundImage from '../assets/Images/Herobgi.png';
 
+// Initialize Socket.io connection
+const socket = io(BASE_URL);
+
 const Chat = () => {
   const { agentId } = useParams();
   const navigate = useNavigate();
@@ -14,20 +17,6 @@ const Chat = () => {
   const [activeAgent, setActiveAgent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState({});
-  const [socket, setSocket] = useState(null); // State to manage socket connection
-
-  // Initialize Socket.io connection
-  useEffect(() => {
-    const newSocket = io(BASE_URL, {
-      transports: ['websocket', 'polling'],
-      withCredentials: true,
-    });
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect(); // Clean up on component unmount
-    };
-  }, []);
 
   // Fetch all agents
   useEffect(() => {
@@ -54,26 +43,22 @@ const Chat = () => {
     });
   }, []);
 
-  // Fetch chat history and handle socket events
+  // Fetch chat history when an agent is selected
   useEffect(() => {
-    if (agentId && socket) {
+    if (agentId) {
       fetchMessages(agentId);
       socket.emit('join_room', agentId);
 
-      const messageListener = (data) => {
+      socket.on('receive_message', (data) => {
         setMessages((prevMessages) => [...prevMessages, data]);
-      };
+      });
 
-      socket.on('receive_message', messageListener);
-
-      // Clean up event listener when the component unmounts or agent changes
       return () => {
-        socket.off('receive_message', messageListener);
+        socket.disconnect();
       };
     }
-  }, [agentId, socket]);
+  }, [agentId]);
 
-  // Fetch messages from backend
   const fetchMessages = async (agentId) => {
     try {
       const response = await fetch(`${BASE_URL}/api/chat/${agentId}`);
@@ -84,7 +69,6 @@ const Chat = () => {
     }
   };
 
-  // Send message
   const sendMessage = async () => {
     if (message.trim()) {
       const messageData = {
@@ -139,6 +123,8 @@ const Chat = () => {
                     <p className="text-sm text-gray-500">{agent.country}</p>
                   </div>
                 </div>
+                
+                {/* Fade line below each profile except the last one */}
                 {index < agents.length - 1 && (
                   <div className="absolute bottom-0 left-12 w-[85%] h-[1px] bg-gradient-to-r from-gray-200 via-gray-400 to-transparent"></div>
                 )}
@@ -150,7 +136,11 @@ const Chat = () => {
         {/* Right Panel: Chat Interface */}
         <div
           className="w-2/3 h-screen flex flex-col bg-cover bg-center"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
           {activeAgent && (
             <div className="flex flex-col h-full mt-14 bg-opacity-80 p-4 shadow-lg">
@@ -170,8 +160,15 @@ const Chat = () => {
               {/* Chat History */}
               <div className="flex-grow overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, index) => (
-                  <div key={index} className={`flex ${msg.sender === userProfile.name ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`p-3 rounded-lg max-w-xs shadow-md ${msg.sender === userProfile.name ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                  <div
+                    key={index}
+                    className={`flex ${msg.sender === userProfile.name ? 'justify-end' : 'justify-start'} space-x-4`}
+                  >
+                    <div
+                      className={`p-3 rounded-lg max-w-xs shadow-md ${
+                        msg.sender === userProfile.name ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
                       <p>{msg.text}</p>
                     </div>
                   </div>
@@ -185,9 +182,12 @@ const Chat = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type a message..."
-                  className="flex-grow p-2 border rounded-lg"
+                  className="flex-grow p-2 bg-white border border-gray-300 rounded-lg"
                 />
-                <button onClick={sendMessage} className="ml-4 bg-blue-500 text-white p-2 rounded-lg">
+                <button
+                  onClick={sendMessage}
+                  className="ml-4 bg-blue-500 text-white p-2 rounded-lg"
+                >
                   Send
                 </button>
               </div>
