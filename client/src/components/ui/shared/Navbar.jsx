@@ -55,7 +55,7 @@ function Navbar() {
 
         <div className="flex-shrink-0 flex gap-4">
           {!auth.user && !userAuth.user ? (
-            // Show login options when no user (neither agent nor normal user) is logged in
+            
             <>
               <Link to="/login">
                 <Button>User Login</Button>
@@ -65,14 +65,14 @@ function Navbar() {
               </Link>
             </>
           ) : auth.user ? (
-            // Show logout for agent if agent is logged in
+          
             <>
               <NavLink onClick={handleAgentLogout} to="/agent-login">
                 <Button>Logout</Button>
               </NavLink>
             </>
           ) : userAuth.user ? (
-            // Show logout for user if user is logged in
+            
             <>
               <NavLink onClick={handleUserLogout} to="/login">
                 <Button>Logout</Button>
