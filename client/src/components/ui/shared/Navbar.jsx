@@ -47,7 +47,7 @@ function Navbar() {
         <div className="flex-grow">
           <div className="flex justify-center font-medium space-x-8">
             <NavLink to="/">Home</NavLink>
-            <NavLink to="/">Agents</NavLink>
+            <NavLink to="/user-dashboard">Agents</NavLink>
             <NavLink to="/">About Us</NavLink>
             <NavLink to="/">Contact</NavLink>
           </div>
