@@ -18,11 +18,13 @@ function Login() {
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
   const [userAuth,setUserAuth] = useUserAuth();
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form submission
+    setLoading(true)
   
     try {
       const response = await axios.post(`${BASE_URL}/api/auth/user-login`, {
@@ -66,6 +68,9 @@ function Login() {
     } catch (error) {
       console.error('Login error:', error);
       toast.error('An error occurred during login'); 
+    }
+    finally{
+      setLoading(false)
     }
   };
   
@@ -123,10 +128,38 @@ function Login() {
                
                 <button
                   type="submit"
-                  className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  
+                  className={`w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                    loading ? 'cursor-not-allowed opacity-75' : ''
+                  }`}
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <svg
+                        className="w-5 h-5 text-white animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      <span>Logging in...</span>
+                    </div>
+                  ) : (
+                    'Login'
+                  )}
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don't have an account?{' '}
