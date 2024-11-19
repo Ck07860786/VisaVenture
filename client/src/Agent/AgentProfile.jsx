@@ -4,6 +4,8 @@ import axios from 'axios';
 import { BASE_URL } from '@/helper/Port';
 import toast from 'react-hot-toast';
 import { MdVerified } from "react-icons/md";
+import Spinner from '@/components/ui/shared/Spinner';
+import Loading from '@/components/ui/shared/Loading';
 
 const AgentProfile = () => {
   const { agentId } = useParams();
@@ -42,7 +44,7 @@ const AgentProfile = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen"><Loading/></div>;
   }
 
   if (!agent) {
