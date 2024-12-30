@@ -49,6 +49,7 @@ function Navbar() {
         <div className="hidden md:flex-grow md:flex justify-center font-medium space-x-8">
           <NavLink to="/">Home</NavLink>
           <NavLink to="/user-dashboard">Agents</NavLink>
+          <NavLink to="/blogs/1">Blogs</NavLink>
           <NavLink to="/">About Us</NavLink>
           <NavLink to="/">Contact</NavLink>
         </div>
@@ -94,6 +95,7 @@ function Navbar() {
         <div className="flex flex-col items-center font-medium space-y-4 py-4">
           <NavLink to="/" className="w-full text-center">Home</NavLink>
           <NavLink to="/user-dashboard" className="w-full text-center">Agents</NavLink>
+          <NavLink to="/blogs/1">Blogs</NavLink>
           <NavLink to="/" className="w-full text-center">About Us</NavLink>
           <NavLink to="/" className="w-full text-center">Contact</NavLink>
 
