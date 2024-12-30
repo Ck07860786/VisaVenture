@@ -3,6 +3,7 @@ import agentModel from "../models/agentModel.js";
 import userModel from "../models/userModel.js";
 import JWT from 'jsonwebtoken'
 import agentKycModel from "../models/agentKycModel.js";
+import visaApplicationModel from "../models/visaApplicationModel.js";
 
 
 export const usersignUpController = async(req,res)=>{
@@ -113,17 +114,21 @@ export const loginController = async (req, res) => {
       process.env.JWT_KEY,
       { expiresIn: "1d" }
     );
+    const userDetails = await visaApplicationModel.findOne({ userId: user._id });
+    
+    
 
     // Send user data along with token
     res.status(200).send({
       success: true,
       message: "Login successful",
       user: {
-        _id: user._id,
+        userId: user._id,
         name: user.name,
         email: user.email,
         phone: user.phone,
         role: user.role, // Role of the user
+        userDetails,
         token,
       },
     });

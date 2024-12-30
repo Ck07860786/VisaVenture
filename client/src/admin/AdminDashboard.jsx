@@ -29,6 +29,7 @@ function AdminDashboard() {
       console.error("Error fetching KYC data:", err);
       setError("Failed to fetch KYC data");
       setLoading(false);
+      
     }
   };
 

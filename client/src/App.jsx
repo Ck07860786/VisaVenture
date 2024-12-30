@@ -16,6 +16,8 @@ import KycRejected from './components/ui/shared/KycRejected';
 import AdminDashboard from './admin/AdminDashboard';
 import AgentProfile from './Agent/AgentProfile';
 import Chat from './components/Chat';
+import VisaApplication from './user/VisaApplication';
+import BlogDetail from './Pages/DetailedBlog';
 
 
 function App() {
@@ -29,6 +31,7 @@ function App() {
         {/* User routes */}
        
           <Route path='/user-dashboard' element={<UserDashboard />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
         
 
         {/* Agent routes */}
@@ -42,6 +45,7 @@ function App() {
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
         <Route path='/agent/:agentId' element={<AgentProfile/>}/>
         <Route path="/chat/:agentId" element={<Chat />} />
+        <Route path="/apply-visa/:agentId" element={<VisaApplication />} />
         {/* 404 Not Found */}
         <Route path='*' element={<NotFound />} />
       </Routes>

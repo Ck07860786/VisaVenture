@@ -7,6 +7,7 @@ const UserAuthProvider = ({ children }) => {
     const [userAuth, setUserAuth] = useState({
         user: null,
         token: "",
+        userId:null,
     });
     const [loading, setLoading] = useState(true); // New state to handle loading
 
@@ -14,10 +15,12 @@ const UserAuthProvider = ({ children }) => {
         const data = localStorage.getItem('userAuth');
         if (data) {
             const parsedData = JSON.parse(data);
+            const user = parsedData?.user;
 
             setUserAuth({
                 user: parsedData?.user || null,
                 token: parsedData?.token || "",
+                userId:user?.userId || null,
             });
 
             if (parsedData?.token) {

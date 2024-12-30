@@ -14,6 +14,8 @@ import Features from '@/components/Features';
 import Footer from '@/components/ui/shared/Footer';
 import { AnimatedShinyTextDemo } from '@/components/Comingsoon';
 import { Link } from 'react-router-dom';
+import VisaProcess from '@/components/VisaProcess';
+import Blogs from '@/components/Blogs';
 
 
 
@@ -51,6 +53,8 @@ function Hero() {
              <Link to='/signup'> <Button>Become User</Button></Link>
            
           </div>
+          <VisaProcess/>
+           <Blogs/>
           <div className=" justify-center text-center mt-40 w-full p-4  bg-transparent">
           <LetterPullup words={'Apply Visa With Confidence'} className='  drop-shadow-lg text-xl font-medium' delay={0.15} />
           

@@ -8,6 +8,7 @@ import dbConnect from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import kycRoutes from './routes/kycRoutes.js';
 import chatRoutes from './routes/chaRoutes.js'; 
+import visaApplicationRoutes from './routes/visaApplicationRoutes.js'; // Added visa application routes
 
 dotenv.config();
 const app = express();
@@ -26,7 +27,8 @@ const io = new Server(server, {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, 
   },
-});
+}); 
+
 
 
 app.use(
@@ -44,6 +46,7 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/kyc/agent', kycRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/visa-application', visaApplicationRoutes);  // Added Visa Application routes
 
 // Default route
 app.get('/', (req, res) => {
