@@ -10,15 +10,15 @@ const steps = [
   },
   {
     id: 2,
-    title: "Step 2: Submit Documents",
-    description: "Upload your personal and business documents securely.",
-    icon: "📄",
-  },
-  {
-    id: 3,
     title: "Step 3: Choose an Agent",
     description: "Select the best agent based on budget, ratings, and reviews.",
     icon: "👤",
+  },
+  {
+    id: 3,
+    title: "Step 2: Submit Documents",
+    description: "Upload your personal and business documents securely.",
+    icon: "📄",
   },
   {
     id: 4,
