@@ -66,11 +66,11 @@ const AgentDashboard = () => {
             </li>
             <li className=' flex items-center gap-2 hover:bg-zinc-900 hover:text-white p-2 rounded  '>
               <span><BellRing/></span>
-              <Link to="/support" >Notifications</Link>
+              <Link to="/" >Notifications</Link>
             </li>
             <li className=' flex items-center gap-2 hover:bg-zinc-900 hover:text-white p-2 rounded  '>
               <span><MessagesSquare/></span>
-              <Link to="/support" >Messages</Link>
+              <Link to="/messages" >Messages</Link>
             </li>
             <li className=' flex items-center gap-2 hover:bg-zinc-900 hover:text-white p-2 rounded  '>
               <span><LogOut/></span>
