@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import { BASE_URL } from '@/helper/Port';
 import Navbar from '@/components/ui/shared/Navbar';
 import backgroundImage from '../assets/Images/Herobgi.png';
+import Loading from './ui/shared/Loading';
 
 // Initialize Socket.io connection
 const socket = io(BASE_URL);
@@ -97,7 +98,7 @@ const Chat = () => {
     setMessages([]);
   };
 
-  if (loading) return <div>Loading agents...</div>;
+  if (loading) return <div><span><Loading/></span> Loading agents...</div>;
   if (agents.length === 0) return <div>No agents available</div>;
 
   return (

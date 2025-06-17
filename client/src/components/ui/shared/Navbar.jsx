@@ -38,24 +38,34 @@ function Navbar() {
       style={{ backgroundColor: '#EFF3F8' }}
     >
       <div className="flex items-center justify-between">
+        {/* Logo Section */}
         <div className="flex-shrink-0">
           <h1 className="text-black drop-shadow-lg text-3xl font-bold">
             Visa<span className="text-blue-900">Venture</span>
           </h1>
         </div>
 
-        <div className="flex-grow">
-          <div className="flex justify-center font-medium space-x-8">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/">Agents</NavLink>
-            <NavLink to="/">About Us</NavLink>
-            <NavLink to="/">Contact</NavLink>
-          </div>
+        {/* NavLinks Section */}
+        <div className="hidden md:flex-grow md:flex justify-center font-medium space-x-8">
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/user-dashboard">Agents</NavLink>
+          <NavLink to="/blogs/1">Blogs</NavLink>
+          <NavLink to="/">About Us</NavLink>
+          <NavLink to="/">Contact</NavLink>
         </div>
 
-        <div className="flex-shrink-0 flex gap-4">
+        {/* Mobile Menu Toggle Button */}
+        <div className="md:hidden flex items-center">
+          <button className="text-black focus:outline-none" type="button" onClick={() => document.getElementById("mobile-menu").classList.toggle("hidden")}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+
+        {/* Auth Buttons Section (Desktop) */}
+        <div className="hidden md:flex-shrink-0 md:flex gap-4">
           {!auth.user && !userAuth.user ? (
-            // Show login options when no user (neither agent nor normal user) is logged in
             <>
               <Link to="/login">
                 <Button>User Login</Button>
@@ -65,17 +75,50 @@ function Navbar() {
               </Link>
             </>
           ) : auth.user ? (
-            // Show logout for agent if agent is logged in
             <>
               <NavLink onClick={handleAgentLogout} to="/agent-login">
                 <Button>Logout</Button>
               </NavLink>
             </>
           ) : userAuth.user ? (
-            // Show logout for user if user is logged in
             <>
               <NavLink onClick={handleUserLogout} to="/login">
                 <Button>Logout</Button>
+              </NavLink>
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Mobile Menu Section */}
+      <div className="md:hidden hidden" id="mobile-menu">
+        <div className="flex flex-col items-center font-medium space-y-4 py-4">
+          <NavLink to="/" className="w-full text-center">Home</NavLink>
+          <NavLink to="/user-dashboard" className="w-full text-center">Agents</NavLink>
+          <NavLink to="/blogs/1">Blogs</NavLink>
+          <NavLink to="/" className="w-full text-center">About Us</NavLink>
+          <NavLink to="/" className="w-full text-center">Contact</NavLink>
+
+          {/* Auth Buttons for Mobile */}
+          {!auth.user && !userAuth.user ? (
+            <>
+              <Link to="/login">
+                <Button className="w-full">User Login</Button>
+              </Link>
+              <Link to="/agent-login">
+                <Button className="w-full">Agent Login</Button>
+              </Link>
+            </>
+          ) : auth.user ? (
+            <>
+              <NavLink onClick={handleAgentLogout} to="/agent-login">
+                <Button className="w-full">Logout</Button>
+              </NavLink>
+            </>
+          ) : userAuth.user ? (
+            <>
+              <NavLink onClick={handleUserLogout} to="/login">
+                <Button className="w-full">Logout</Button>
               </NavLink>
             </>
           ) : null}

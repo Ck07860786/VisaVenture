@@ -3,6 +3,7 @@ import agentModel from "../models/agentModel.js";
 import userModel from "../models/userModel.js";
 import JWT from 'jsonwebtoken'
 import agentKycModel from "../models/agentKycModel.js";
+import visaApplicationModel from "../models/visaApplicationModel.js";
 
 
 export const usersignUpController = async(req,res)=>{
@@ -113,17 +114,21 @@ export const loginController = async (req, res) => {
       process.env.JWT_KEY,
       { expiresIn: "1d" }
     );
+    const userDetails = await visaApplicationModel.findOne({ userId: user._id });
+    
+    
 
-    // Send user data along with token
+   
     res.status(200).send({
       success: true,
       message: "Login successful",
       user: {
-        _id: user._id,
+        userId: user._id,
         name: user.name,
         email: user.email,
         phone: user.phone,
-        role: user.role, // Role of the user
+        role: user.role, 
+        userDetails,
         token,
       },
     });
@@ -169,14 +174,14 @@ export const agentLoginController = async (req, res) => {
             success: true,
             message: 'Login successful',
             agent: {
-                _id: agent._id,         // Include agent ID
-                email: agent.email,     // Include agent email
-                phone: agent.phone,     // Include agent phone
-                name: agent.name, // Include agency name if available
+                _id: agent._id,       
+                email: agent.email,     
+                phone: agent.phone,     
+                name: agent.name, 
                 kycStatus: agent.kycStatus,
                 token,
                 isKycSubmitted,
-    kycStatus: kyc ? kyc.kycStatus : null,              // Include the token
+    kycStatus: kyc ? kyc.kycStatus : null,  
             },
         });
     } catch (error) {
@@ -189,6 +194,41 @@ export const agentLoginController = async (req, res) => {
     }
 };
 
-
+export const serachAgentController = async (req, res) => {
+    const { query } = req.query;
+  
+    if (!query) {
+      return res.status(400).send({
+        success: false,
+        message: "Query is required",
+      });
+    }
+  
+    try {
+      const agents = await agentKycModel.find({
+        $and: [
+          {
+            $or: [
+              { name: { $regex: query, $options: "i" } },
+              { email: { $regex: query, $options: "i" } },
+              { country: { $regex: query, $options: "i" } },
+            ],
+          },
+          { kycStatus: "approved" }, // Only KYC-approved agents
+        ],
+      }).select("_id name email country personalDocuments");
+  
+      res.status(200).send({
+        success: true,
+        agents,
+      });
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: "Server Error",
+      });
+    }
+  };
+  
 
 

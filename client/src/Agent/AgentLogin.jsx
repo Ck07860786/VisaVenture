@@ -1,4 +1,3 @@
-// src/components/AgentLogin.js
 import React, { useState } from 'react';
 import SideImage from '../assets/Images/SideImage.png';
 import MainLogo from '../assets/Images/MainLogo.png';
@@ -11,14 +10,15 @@ import { Link, useNavigate } from 'react-router-dom';
 function AgentLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [auth, setAuth] = useAuth(); // Ensure you're using the correct context
+  const [auth, setAuth] = useAuth();
+  const [loading, setLoading]= useState(false)
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     try {
-      // Send login request
       const response = await axios.post(`${BASE_URL}/api/auth/agent-login`, {
         email,
         password,
@@ -27,9 +27,8 @@ function AgentLogin() {
       if (response.data.success) {
         toast.success(response.data.message);
         
-        const { isKycSubmitted, agent,kycStatus } = response.data; // Extract agent and KYC status
+        const { isKycSubmitted, agent, kycStatus } = response.data;
 
-        // Set auth state and save to localStorage
         setAuth({
           user: agent,
           token: agent.token,
@@ -38,35 +37,29 @@ function AgentLogin() {
 
         localStorage.setItem('auth', JSON.stringify({ user: agent, token: agent.token, agentId: agent._id }));
 
-        // Redirect based on KYC status
         if (agent && isKycSubmitted) {
-          navigate('/kyc-submitted'); // Redirect to KYC submitted page
-        }
-
-        else if(agent && isKycSubmitted && kycStatus==='rejected'){
-
+          navigate('/kyc-submitted');
+        } else if(agent && isKycSubmitted && kycStatus==='rejected'){
           navigate('/kyc-rejected')
-
-        }
-        
-        else {
-          navigate('/agent-kyc'); // Redirect to KYC form page
+        } else {
+          navigate('/agent-kyc');
         }
       } else {
-        toast.error(response.data.message); // Display error message from response
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error); // Log the error for debugging
-      toast.error('Something went wrong'); // Generic error message
+      console.error(error);
+      toast.error('Something went wrong');
+    } finally {
+      setLoading(false)
     }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Left Section */}
-      <section className="bg-white w-1/2 dark:bg-gray-900">
+      <section className="bg-white w-full md:w-1/2 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <h1 className=' text-4xl font-bold mb-8 '>Visa<span className=' text-blue-800 '>Venture</span></h1>
+          <h1 className='text-4xl font-bold mb-8'>Visa<span className='text-blue-800'>Venture</span></h1>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -105,9 +98,36 @@ function AgentLogin() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className={`w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${loading ? 'cursor-not-allowed opacity-75' : ''}`}
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <svg
+                        className="w-5 h-5 text-white animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      <span>Logging in...</span>
+                    </div>
+                  ) : (
+                    'Login'
+                  )}
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don't have an account?{' '}
@@ -121,7 +141,6 @@ function AgentLogin() {
         </div>
       </section>
 
-      {/* Right Section */}
       <div className="relative hidden md:block md:w-1/2">
         <img className="h-svh object-cover" src={SideImage} alt="Background" />
       </div>
@@ -130,6 +149,3 @@ function AgentLogin() {
 }
 
 export default AgentLogin;
-
-
-
