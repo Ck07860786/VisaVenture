@@ -166,22 +166,25 @@ const KYCVerification = () => {
 
 
 
-  const fetchKycStatus = async()=>{
-   
+const fetchKycStatus = async () => {
+  if (!auth?.token) return; // make sure token exists
 
-    try {
-     const {data} = await axios.get(`${BASE_URL}/api/kyc/agent/kyc-status`);
-     setKycStatus(data.kycStatus)
-     
-    } catch (error) {
-     console.log('Error fetching kyc status',error)
-     
-    }
-   }
+  try {
+    const { data } = await axios.get(`${BASE_URL}/api/kyc/agent/kyc-status`, {
+      headers: {
+        Authorization: `Bearer ${auth.token}`,
+      },
+    });
+    setKycStatus(data.kycStatus);
+  } catch (error) {
+    console.error('Error fetching KYC status', error.response ? error.response.data : error.message);
+  }
+};
 
-     useEffect(() => {
-   if(auth.token) fetchKycStatus();
-  });
+
+ useEffect(() => {
+  if (auth.token) fetchKycStatus();
+}, [auth.token]); 
 
  // Empty array to run only on mount
   
