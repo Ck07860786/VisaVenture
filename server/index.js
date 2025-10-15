@@ -23,7 +23,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://www.visaventures.in", "http://localhost:3000"], 
+    origin: ["https://www.visaventures.in","https://visa-venture-kpi5.vercel.app", "http://localhost:3000"], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, 
   },
