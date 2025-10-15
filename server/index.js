@@ -21,31 +21,20 @@ dbConnect();
 const server = http.createServer(app);
 
 
-const allowedOrigins = [
-  "https://visa-venture.vercel.app",
-  "https://www.visaventures.in",
-  "http://localhost:5173", // optional for local dev
-];
-
-
 const io = new Server(server, {
   cors: {
-     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // for Postman or server-to-server calls
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    
+    origin: ["https://www.visaventures.in", "http://localhost:3000"], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, 
   },
 }); 
 
 
+const allowedOrigins = [
+  "https://visa-venture.vercel.app",
+  "https://www.visaventures.in",
+  "http://localhost:5173", // optional for local dev
+];
 app.use(
   cors({
    origin: function (origin, callback) {
