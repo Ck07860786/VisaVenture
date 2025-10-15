@@ -30,12 +30,24 @@ const io = new Server(server, {
 }); 
 
 
-
+const allowedOrigins = [
+  "https://visa-venture.vercel.app",
+  "https://www.visaventures.in",
+  "http://localhost:5173", // optional for local dev
+];
 app.use(
   cors({
-    origin: '*', 
-    credentials: true, 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+   origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // for Postman or server-to-server calls
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
